@@ -22,9 +22,8 @@ TEST_DATA_PATH = 'test_FD004.txt'
 SEQUENCE_LENGTH = 50
 ROLLING_WINDOW_SIZE = 5
 
-# --- UPDATED: Fewer, highly relevant sensors for plotting ---
+# List of key sensors for plotting
 KEY_SENSORS_TO_PLOT_TRENDS = ['sensor_2', 'sensor_7', 'sensor_11', 'sensor_15'] 
-# We will plot their rolling averages
 
 # --- Caching ---
 # Cache the loaded model, scaler, and feature list for performance
@@ -180,9 +179,9 @@ if model and scaler and feature_cols and test_data_raw is not None:
             else:
                 st.success(f"**{status.upper()}:** No immediate maintenance required.", icon=emoji)
             
-            st.balloons()
+            # --- st.balloons() line has been removed from here ---
             
-            # --- UPDATED: Interactive Sensor Trend Plot ---
+            # --- Interactive Sensor Trend Plot ---
             st.subheader("Key Sensor Degradation Trends (Engine Lifetime)")
             st.markdown("This chart shows the **smoothed rolling average** of critical sensor values, highlighting degradation over time.")
             
@@ -206,17 +205,18 @@ if model and scaler and feature_cols and test_data_raw is not None:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # --- NEW: Sensor Descriptions ---
-            with st.expander("What do these sensors mean?"):
+            # --- NEW: Sensor explanations ---
+            st.subheader("What These Sensors Mean")
+            with st.expander("Click to see explanations for the sensors plotted above"):
                 st.markdown("""
-                These sensors are critical indicators of engine health:
-                - **sensor_2**: Total pressure at HPC outlet (psig) - *Measures the efficiency of the high-pressure compressor.*
-                - **sensor_7**: Ratio of fuel flow to Ps30 (pps/psia) - *Indicates efficiency of fuel combustion and power generation.*
-                - **sensor_11**: Total pressure at LPT outlet (psig) - *Measures the efficiency of the low-pressure turbine.*
-                - **sensor_15**: Total pressure at bypass-duct (psig) - *Measures the pressure in the bypass duct, indicating overall fan performance.*
-                
-                A clear upward or downward trend in these smoothed values is a strong sign of degradation.
+                These sensors are known indicators of engine health and degradation:
+
+                * **sensor\_2 (LPC Outlet Pressure):** Measures the pressure of air leaving the Low-Pressure Compressor. A decreasing trend can indicate wear or fouling of the compressor blades.
+                * **sensor\_7 (HPT Coolant Bleed):** Measures the bleed air used to cool the High-Pressure Turbine. A changing trend can signal a leak or a change in turbine efficiency.
+                * **sensor\_11 (HPC Outlet Static Pressure):** Measures the static pressure of air leaving the High-Pressure Compressor. A decreasing trend often points to compressor degradation.
+                * **sensor\_15 (Bypass Duct Pressure):** Measures the pressure in the bypass duct (the air that goes around the engine core). Changes can indicate issues with the fan or bypass system.
                 """)
+                st.info("Note: These are simulated values from the C-MAPSS dataset and represent common, unscaled indicators of engine wear.")
 
     st.sidebar.markdown("---")
     st.sidebar.info(
@@ -227,4 +227,3 @@ if model and scaler and feature_cols and test_data_raw is not None:
     
 else:
     st.error("Could not load all required assets. Dashboard cannot start.")
-
