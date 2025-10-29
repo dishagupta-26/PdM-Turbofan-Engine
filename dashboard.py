@@ -179,8 +179,6 @@ if model and scaler and feature_cols and test_data_raw is not None:
             else:
                 st.success(f"**{status.upper()}:** No immediate maintenance required.", icon=emoji)
             
-            # --- st.balloons() line has been removed from here ---
-            
             # --- Interactive Sensor Trend Plot ---
             st.subheader("Key Sensor Degradation Trends (Engine Lifetime)")
             st.markdown("This chart shows the **smoothed rolling average** of critical sensor values, highlighting degradation over time.")
@@ -205,18 +203,26 @@ if model and scaler and feature_cols and test_data_raw is not None:
             )
             st.plotly_chart(fig, use_container_width=True)
 
-            # --- NEW: Sensor explanations ---
-            st.subheader("What These Sensors Mean")
-            with st.expander("Click to see explanations for the sensors plotted above"):
-                st.markdown("""
-                These sensors are known indicators of engine health and degradation:
+            # --- ***NEW, UPDATED SENSOR EXPLANATIONS*** ---
+            st.subheader("Why Are These Graphs So Noisy?")
+            with st.expander("Click to learn why these trends are complex"):
+                st.info("""
+                **This is the core challenge of this dataset.** The sharp jumps and drops you see are **not** degradation. 
+                They are caused by the engine's **changing operating conditions** (e.g., altitude, speed).
 
-                * **sensor\_2 (LPC Outlet Pressure):** Measures the pressure of air leaving the Low-Pressure Compressor. A decreasing trend can indicate wear or fouling of the compressor blades.
-                * **sensor\_7 (HPT Coolant Bleed):** Measures the bleed air used to cool the High-Pressure Turbine. A changing trend can signal a leak or a change in turbine efficiency.
-                * **sensor\_11 (HPC Outlet Static Pressure):** Measures the static pressure of air leaving the High-Pressure Compressor. A decreasing trend often points to compressor degradation.
-                * **sensor\_15 (Bypass Duct Pressure):** Measures the pressure in the bypass duct (the air that goes around the engine core). Changes can indicate issues with the fan or bypass system.
+                The true, slow degradation trend is *hidden* within this noise. We (humans) can't easily see it, but the AI model is trained to find these subtle patterns.
                 """)
-                st.info("Note: These are simulated values from the C-MAPSS dataset and represent common, unscaled indicators of engine wear.")
+                
+                st.markdown("""
+                Here is what these sensors measure:
+
+                * **sensor\_2 (LPC Outlet Pressure):** Measures the pressure of air leaving the Low-Pressure Compressor. This value is highly sensitive to the engine's current power setting and altitude.
+                * **sensor\_7 (HPT Coolant Bleed):** Measures bleed air used to cool the High-Pressure Turbine. Its value changes based on engine thrust and cooling requirements.
+                * **sensor\_11 (HPC Outlet Static Pressure):** Measures the static pressure of air leaving the High-Pressure Compressor. Like sensor 2, this is heavily influenced by the operating conditions.
+                * **sensor\_15 (Bypass Duct Pressure):** Measures the pressure in the bypass duct (the air that goes around the engine core). 
+                
+                Our AI model works by looking at all 45 features (including these sensors, their volatility, and the 3 operating settings) at once to find the hidden degradation pattern.
+                """)
 
     st.sidebar.markdown("---")
     st.sidebar.info(
