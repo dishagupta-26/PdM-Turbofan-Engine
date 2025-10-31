@@ -2,7 +2,7 @@
 
 This repository contains a Streamlit web application that predicts the Remaining Useful Life (RUL) of turbofan engines using a deep learning model. The project is based on the NASA C-MAPSS (Commercial Modular Aero-Propulsion System Simulation) `FD004` dataset.
 
-The deployed application allows a user to select any of the 100 engines from the test dataset and get a live RUL prediction, health status, and a visualization of key sensor degradation trends.
+The deployed application allows a user to select any of the 248 engines from the test dataset and get a live RUL prediction, health status, and a visualization of key sensor degradation trends.
 
 ### Key Features
 
